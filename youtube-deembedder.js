@@ -18,8 +18,10 @@ javascript:(function() {
 
     var url;
     var loc = window.location.href;
+    var embedRegex = 
+        /^(http(s)?:\/\/)?(\/\/)?(www.)?youtube(-nocookie)?.com\/embed\/.*/m;
 
-    if(loc && loc.match(/^http(s)?:\/\/(www.)?youtube.com\/embed\/.*/m)) {
+    if(loc && loc.match(embedRegex)) {
         // we are directly on a youtube embed page, so just pop it out
         url = embedToWatch(loc);
 
@@ -34,7 +36,7 @@ javascript:(function() {
             // Get the embed URL
             link = links[x].src;
 
-            if(link && link.match(/^(http(s)?:\/\/)?(\/\/)?(www.)?youtube(-nocookie)?.com\/embed\/.*/m)) {
+            if(link && link.match(embedRegex)) {
                 url = embedToWatch(link);
 
                 if(url) {
