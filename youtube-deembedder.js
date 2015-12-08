@@ -6,13 +6,22 @@
  * them in new tabs.
  */
 javascript:(function() {
-    $("iframe[src^='https://www.youtube']").each(function(a) {
-        var link = $(this).attr("src");
+    // Find all of the embedded videos in the document
+    var links = document.querySelectorAll("iframe[src^='https://www.youtube']");
+        
+    for(var x = 0; x < links.length; x += 1) {
+        if(links) {
+            // Get the embed URL
+            link = links[x].src;
 
-        if(link) {
-            link = link.replace(/^.*embed\/(.*)/gm, "https://www.youtube.com/watch?v=$1");
+            if(link) {
+                // convert the embed URL into a watch URL
+                link = link.replace(/^.*embed\/(.*)/gm, 
+                        "https://www.youtube.com/watch?v=$1");
 
-            window.open(link);
+                // open the URL in a new tab/window
+                window.open(link);
+            }
         }
-    });
+    }
 })();
