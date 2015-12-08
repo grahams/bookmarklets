@@ -27,7 +27,7 @@ javascript:(function() {
     }
     else {
         // Find all of the embedded videos in the document
-        var links = document.querySelectorAll("iframe[src^='https://www.youtube']");
+        var links = document.querySelectorAll("iframe[src*='youtube.com'][src*='embed']");
             
         for(var x = 0; x < links.length; x += 1) {
             if(links) {
