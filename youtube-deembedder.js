@@ -27,20 +27,19 @@ javascript:(function() {
     }
     else {
         // Find all of the embedded videos in the document
-        var links = document.querySelectorAll("iframe[src*='youtube.com'][src*='embed']");
+        // var links = document.querySelectorAll("iframe[src*='youtube.com'][src*='embed']");
+        var links = document.querySelectorAll("iframe");
             
         for(var x = 0; x < links.length; x += 1) {
-            if(links) {
-                // Get the embed URL
-                link = links[x].src;
+            // Get the embed URL
+            link = links[x].src;
 
-                if(link) {
-                    url = embedToWatch(link);
+            if(link && link.match(/^(http(s)?:\/\/)?(\/\/)?(www.)?youtube(-nocookie)?.com\/embed\/.*/m)) {
+                url = embedToWatch(link);
 
-                    if(url) {
-                        // open the URL in a new tab/window
-                        window.open(url);
-                    }
+                if(url) {
+                    // open the URL in a new tab/window
+                    window.open(url);
                 }
             }
         }
