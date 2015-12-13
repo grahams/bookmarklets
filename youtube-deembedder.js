@@ -7,21 +7,40 @@
  */
 javascript:(function() {
     var embedToWatch = function(url) {
+        var link;
+
         if(url) {
-            // convert the embed URL into a watch URL
-            link = url.replace(/^.*embed\/(.*)/gm, 
-                    "https://www.youtube.com/watch?v=$1");
+            if(url.match(ytEmbedRegex)) {
+                // convert the embed URL into a watch URL
+                link = url.replace(/^.*embed\/(.*)/gm, 
+                        "https://www.youtube.com/watch?v=$1");
+            }
+            else if(url.match(vimeoEmbedRegex)) {
+                link = url.replace(/^.*video\/(.*)/gm,
+                        "https://vimeo.com/$1");
+            }
 
             return link;
         }
     };
 
+    var urlFilter = function(url) {
+        if(url && (url.match(ytEmbedRegex) || url.match(vimeoEmbedRegex)) ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
     var url;
     var loc = window.location.href;
-    var embedRegex = 
+    var ytEmbedRegex = 
         /^(http(s)?:\/\/)?(\/\/)?(www.)?youtube(-nocookie)?.com\/embed\/.*/m;
+    var vimeoEmbedRegex = 
+        /^(http(s)?:\/\/)?(\/\/)?player.vimeo.com\/video\/.*/m;
 
-    if(loc && loc.match(embedRegex)) {
+    if(urlFilter(loc)) {
         // we are directly on a youtube embed page, so just pop it out
         url = embedToWatch(loc);
 
@@ -36,7 +55,7 @@ javascript:(function() {
             // Get the embed URL
             link = links[x].src;
 
-            if(link && link.match(embedRegex)) {
+            if(urlFilter(link)) {
                 url = embedToWatch(link);
 
                 if(url) {
