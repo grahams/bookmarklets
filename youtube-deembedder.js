@@ -19,13 +19,28 @@ javascript:(function() {
                 link = url.replace(/^.*video\/(.*)/gm,
                         "https://vimeo.com/$1");
             }
+            else if(url.match(embedlyEmbedRegex)) {
+                var queryString = {};
+
+                url.replace(
+                    new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+                    function($0, $1, $2, $3) { queryString[$1] = $3; }
+                );
+
+                var eLink = decodeURIComponent(queryString['src']);
+
+                link = embedToWatch(eLink);
+            }
 
             return link;
         }
     };
 
     var urlFilter = function(url) {
-        if(url && (url.match(ytEmbedRegex) || url.match(vimeoEmbedRegex)) ) {
+        if(url && (url.match(ytEmbedRegex) || 
+                    url.match(vimeoEmbedRegex) ||
+                    url.match(embedlyEmbedRegex)
+                    ) ) {
             return true;
         }
         else {
@@ -39,6 +54,8 @@ javascript:(function() {
         /^(http(s)?:\/\/)?(\/\/)?(www.)?youtube(-nocookie)?.com\/embed\/.*/m;
     var vimeoEmbedRegex = 
         /^(http(s)?:\/\/)?(\/\/)?player.vimeo.com\/video\/.*/m;
+    var embedlyEmbedRegex = 
+        /^(http(s)?:\/\/)?(\/\/)?.*embedly.com\/widgets\/media.html.*/m;
 
     if(urlFilter(loc)) {
         // we are directly on a youtube embed page, so just pop it out
@@ -48,7 +65,6 @@ javascript:(function() {
     }
     else {
         // Find all of the embedded videos in the document
-        // var links = document.querySelectorAll("iframe[src*='youtube.com'][src*='embed']");
         var links = document.querySelectorAll("iframe");
             
         for(var x = 0; x < links.length; x += 1) {
